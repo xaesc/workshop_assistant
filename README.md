@@ -11,6 +11,7 @@ Interface tactile pour la gestion d'atelier via Home Assistant.
 - `src/ui.cpp` — les 4 onglets (Accueil, Relais, Mesures, Scénarios)
 - `include/config.h` — identifiants WiFi/MQTT à renseigner
 - `lv_conf.h` — configuration LVGL
+- `simulator/` — simulateur PC SDL2 pour tester l'UI sans matériel
 
 ## Topics MQTT
 | Topic | Direction | Format |
@@ -21,10 +22,18 @@ Interface tactile pour la gestion d'atelier via Home Assistant.
 | `atelier/scenario/set` | ESP32 → HA | `"Mode Travail"` |
 | `atelier/esp32/status` | ESP32 → HA | `online` (retained) |
 
-## Build
+## Build embarqué (ESP32-S3)
 ```bash
 pio run -t upload
 pio device monitor
+```
+
+## Simulateur PC (SDL2) — test sans matériel
+```bash
+sudo apt install libsdl2-dev liblvgl-dev
+cd simulator
+cmake -B build && cmake --build build
+./build/atelier_sim
 ```
 
 ## À faire côté Home Assistant
