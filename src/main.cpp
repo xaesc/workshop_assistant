@@ -92,6 +92,18 @@ void sendScenarioCommand(const char *scenario) {
     mqtt.publish(MQTT_TOPIC_SCENARIO, scenario);
 }
 
+static void updateClock() {
+    static unsigned long lastClock = 0;
+    if (millis() - lastClock > 30000) {
+        lastClock = millis();
+        time_t now = time(nullptr);
+        struct tm *t = localtime(&now);
+        char buf[8];
+        snprintf(buf, sizeof(buf), "%02d:%02d", t->tm_hour, t->tm_min);
+        uiUpdateClock(buf);
+    }
+}
+
 void setup() {
     Serial.begin(115200);
     pinMode(TFT_BL, OUTPUT);
@@ -130,5 +142,7 @@ void loop() {
     if (!mqtt.connected()) mqttReconnect();
     mqtt.loop();
     lv_timer_handler();
+    uiTick();
+    updateClock();
     delay(5);
 }
